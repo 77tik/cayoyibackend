@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LeetcodeEditor">
+    <option name="projectConfig">
+      <map>
+        <entry key="D:/codes/tmp/leetcode/leetcode/editor/cn/[126]单词接龙 II.go">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="D:/codes/tmp/leetcode/leetcode/editor/cn/doc/content/[126]单词接龙 II.md" />
+              <option name="frontendQuestionId" value="leetcode.cn126" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="D:/codes/tmp/leetcode/leetcode/editor/cn/[126]单词接龙 II.go" />
+              <option name="titleSlug" value="word-ladder-ii" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

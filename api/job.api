@@ -1,0 +1,29 @@
+syntax = "v1"
+
+@server (
+	group:  job
+	prefix: /api/job
+	tags:   job
+// authType: JWT
+// jwt:    Auth
+)
+service ldhydropower-api {
+	@doc (
+		summary:  "作业文件下载"
+		produces: "application/zip"
+	)
+	@handler DownloadJobs
+	post /download/jobs (DownloadJobsReq) returns ([]byte )
+}
+
+type (
+	// 下载作业请求
+	DownloadJobsReq {
+		JobNumbers []string `json:"jobNumbers"` // 要下载的作业号列表
+	}
+)
+
+type DownloadJobResp {
+	url string `json:"url"` // 压缩包下载地址
+}
+

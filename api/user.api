@@ -1,0 +1,77 @@
+syntax = "v1"
+
+import "common.api"
+
+type GetPubKeyResp {
+	PubKey string `json:"pub_key"` // RSA 公钥, base64 编码的 DER 格式
+}
+
+type LoginReq {
+	Accout string `json:"accout,optional" zh_Hans_CN:"账号" validate:"required"` // 账号
+	Passwd string `json:"passwd,optional" zh_Hans_CN:"密码" validate:"required"` // 密码, base64 编码的使用 RSA-OAEP 加密的密码
+}
+
+type LoginResp {
+	Jwt string `json:"jwt"` // jwt token
+}
+
+@server (
+	group:  user
+	tags:   user
+	prefix: /api/user
+)
+service ldhydropower-api {
+	@doc (
+		summary: "获取 RSA 加密公钥"
+	)
+	@handler GetPubKey
+	get /pubkey returns (GetPubKeyResp)
+
+	@doc (
+		summary: "用户登录"
+	)
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+}
+
+type User {
+	ID          int64   `json:"id"` // 用户 ID
+	Account     string  `json:"account"` // 用户名/账号
+	FullName    string  `json:"full_name"` // 姓名
+	Department  string  `json:"department"` // 部门
+	PhoneNumber *string `json:"phone_number"` // 手机号
+	Email       *string `json:"email"` // 邮箱
+}
+
+type PasswdPair {
+	OldPasswd string `json:"old_passwd,optional" zh_Hans_CN:"旧密码" validate:"required"` // 旧密码
+	NewPasswd string `json:"new_passwd,optional" zh_Hans_CN:"新密码" validate:"required"` // 新密码
+}
+
+type UpdateUserReq {
+	Passwd      *PasswdPair `json:"passwd,optional" validate:"omitempty"` // 密码, base64 编码的使用 RSA-OAEP 加密的密码. 8-16 个字符，至少包含小写字母、大写字母、数字和特殊字符中的两种. 不更新不要传.
+	Email       *string     `json:"email,optional" zh_Hans_CN:"邮箱" validate:"omitempty,email"` // 邮箱, 不更新不要传
+	PhoneNumber *string     `json:"phone_number,optional" zh_Hans_CN:"手机号" validate:"omitempty,cnmobilephonenumber"` // 手机号, 不更新不要传
+}
+
+@server (
+	group:  user
+	prefix: /api/user
+	tags:   user
+// authType: JWT
+// jwt:    Auth
+)
+service ldhydropower-api {
+	@doc (
+		summary: "用户信息"
+	)
+	@handler GetUser
+	get / returns (User)
+
+	@doc (
+		summary: "用户信息修改"
+	)
+	@handler UpdateUser
+	post / (UpdateUserReq)
+}
+

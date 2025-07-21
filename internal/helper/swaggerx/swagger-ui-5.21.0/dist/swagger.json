@@ -1,0 +1,436 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "title": "四川华电泸定电站 API",
+    "contact": {
+      "name": "David Du",
+      "email": "david.du@yuansuan.com"
+    },
+    "version": "v0.0.1"
+  },
+  "basePath": "/",
+  "paths": {
+    "/api/job/api/job/download": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "job"
+        ],
+        "summary": "作业文件下载",
+        "operationId": "jobDownloadJob",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "business code",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "$ref": "#/definitions/DownloadJobResp"
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "用户信息",
+        "operationId": "userGetUser",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "business code",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "$ref": "#/definitions/User"
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "用户信息修改",
+        "operationId": "userUpdateUser",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "用户登录",
+        "operationId": "userLogin",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "business code",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "$ref": "#/definitions/LoginResp"
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/pubkey": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "获取 RSA 加密公钥",
+        "operationId": "userGetPubKey",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "business code",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "$ref": "#/definitions/GetPubKeyResp"
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "DownloadJobReq": {
+      "type": "object",
+      "required": [
+        "jobIds"
+      ],
+      "properties": {
+        "jobIds": {
+          "description": "作业号数组",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "DownloadJobResp": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "description": "压缩包下载地址",
+          "type": "string"
+        }
+      }
+    },
+    "GetPubKeyResp": {
+      "type": "object",
+      "required": [
+        "pub_key"
+      ],
+      "properties": {
+        "pub_key": {
+          "description": "RSA 公钥, base64 编码的 DER 格式",
+          "type": "string"
+        }
+      }
+    },
+    "KIntVStr": {
+      "type": "object",
+      "required": [
+        "k",
+        "v"
+      ],
+      "properties": {
+        "k": {
+          "type": "integer"
+        },
+        "v": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginReq": {
+      "type": "object",
+      "properties": {
+        "accout": {
+          "description": "账号",
+          "type": "string"
+        },
+        "passwd": {
+          "description": "密码, base64 编码的使用 RSA-OAEP 加密的密码",
+          "type": "string"
+        }
+      }
+    },
+    "LoginResp": {
+      "type": "object",
+      "required": [
+        "jwt"
+      ],
+      "properties": {
+        "jwt": {
+          "description": "jwt token",
+          "type": "string"
+        }
+      }
+    },
+    "Pager": {
+      "type": "object",
+      "required": [
+        "page_index",
+        "page_size"
+      ],
+      "properties": {
+        "page_index": {
+          "description": "分页",
+          "type": "integer",
+          "default": 1,
+          "example": 1
+        },
+        "page_size": {
+          "description": "分页",
+          "type": "integer",
+          "default": 10,
+          "example": 10
+        }
+      }
+    },
+    "PagerForm": {
+      "type": "object"
+    },
+    "PasswdPair": {
+      "type": "object",
+      "properties": {
+        "new_passwd": {
+          "description": "新密码",
+          "type": "string"
+        },
+        "old_passwd": {
+          "description": "旧密码",
+          "type": "string"
+        }
+      }
+    },
+    "TimeRange": {
+      "type": "object",
+      "required": [
+        "start_time",
+        "stop_time"
+      ],
+      "properties": {
+        "start_time": {
+          "description": "时间辍, 秒",
+          "type": "integer"
+        },
+        "stop_time": {
+          "description": "时间辍, 秒",
+          "type": "integer"
+        }
+      }
+    },
+    "TimeRangeForm": {
+      "type": "object"
+    },
+    "UpdateUserReq": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "description": "邮箱, 不更新不要传",
+          "type": "string"
+        },
+        "passwd": {
+          "description": "密码, base64 编码的使用 RSA-OAEP 加密的密码. 8-16 个字符，至少包含小写字母、大写字母、数字和特殊字符中的两种. 不更新不要传.",
+          "type": "object",
+          "properties": {
+            "new_passwd": {
+              "description": "新密码",
+              "type": "string"
+            },
+            "old_passwd": {
+              "description": "旧密码",
+              "type": "string"
+            }
+          },
+          "$ref": "#/definitions/PasswdPair"
+        },
+        "phone_number": {
+          "description": "手机号, 不更新不要传",
+          "type": "string"
+        }
+      }
+    },
+    "UpperLower": {
+      "type": "object",
+      "required": [
+        "upper",
+        "lower"
+      ],
+      "properties": {
+        "lower": {
+          "description": "下限",
+          "type": "number"
+        },
+        "upper": {
+          "description": "上限",
+          "type": "number"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "id",
+        "account",
+        "full_name",
+        "department",
+        "phone_number",
+        "email"
+      ],
+      "properties": {
+        "account": {
+          "description": "用户名/账号",
+          "type": "string"
+        },
+        "department": {
+          "description": "部门",
+          "type": "string"
+        },
+        "email": {
+          "description": "邮箱",
+          "type": "string"
+        },
+        "full_name": {
+          "description": "姓名",
+          "type": "string"
+        },
+        "id": {
+          "description": "用户 ID",
+          "type": "integer"
+        },
+        "phone_number": {
+          "description": "手机号",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "JWT": {
+      "description": "使用 JWT token，请在前缀加上 'Bearer '，例如：Bearer x.y.z",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "x-date": "2025-07-21 09:27:58",
+  "x-description": "This is a goctl generated swagger file.",
+  "x-github": "https://github.com/zeromicro/go-zero",
+  "x-go-zero-doc": "https://go-zero.dev/",
+  "x-goctl-version": "1.8.4"
+}

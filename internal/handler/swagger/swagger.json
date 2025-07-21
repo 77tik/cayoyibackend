@@ -1,0 +1,422 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "四川华电泸定电站 API",
+    "description": "四川华电泸定电站后端服务 swagger 文档",
+    "version": "v0.0.1"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/job/download/jobs": {
+      "post": {
+        "summary": "作业文件下载",
+        "operationId": "DownloadJobs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/byte"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 下载作业请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DownloadJobsReq"
+            }
+          }
+        ],
+        "tags": [
+          "job"
+        ]
+      }
+    },
+    "/api/user/": {
+      "get": {
+        "summary": "用户信息",
+        "operationId": "GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      },
+      "post": {
+        "summary": "用户信息修改",
+        "operationId": "UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "summary": "用户登录",
+        "operationId": "Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/user/pubkey": {
+      "get": {
+        "summary": "获取 RSA 加密公钥",
+        "operationId": "GetPubKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetPubKeyResp"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "DownloadJobResp": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": " 压缩包下载地址"
+        }
+      },
+      "title": "DownloadJobResp",
+      "required": [
+        "url"
+      ]
+    },
+    "DownloadJobsReq": {
+      "type": "object",
+      "properties": {
+        "jobNumbers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 要下载的作业号列表"
+        }
+      },
+      "title": "DownloadJobsReq",
+      "required": [
+        "jobNumbers"
+      ]
+    },
+    "GetPubKeyResp": {
+      "type": "object",
+      "properties": {
+        "pub_key": {
+          "type": "string",
+          "description": " RSA 公钥, base64 编码的 DER 格式"
+        }
+      },
+      "title": "GetPubKeyResp",
+      "required": [
+        "pub_key"
+      ]
+    },
+    "KIntVStr": {
+      "type": "object",
+      "properties": {
+        "k": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "v": {
+          "type": "string"
+        }
+      },
+      "title": "KIntVStr",
+      "required": [
+        "k",
+        "v"
+      ]
+    },
+    "LoginReq": {
+      "type": "object",
+      "properties": {
+        "accout": {
+          "type": "string",
+          "description": " 账号"
+        },
+        "passwd": {
+          "type": "string",
+          "description": " 密码, base64 编码的使用 RSA-OAEP 加密的密码"
+        }
+      },
+      "title": "LoginReq",
+      "required": [
+        "账号",
+        "密码"
+      ]
+    },
+    "LoginResp": {
+      "type": "object",
+      "properties": {
+        "jwt": {
+          "type": "string",
+          "description": " jwt token"
+        }
+      },
+      "title": "LoginResp",
+      "required": [
+        "jwt"
+      ]
+    },
+    "Pager": {
+      "type": "object",
+      "properties": {
+        "page_index": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 分页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 分页"
+        }
+      },
+      "title": "Pager",
+      "required": [
+        "page_index",
+        "page_size"
+      ]
+    },
+    "PagerForm": {
+      "type": "object",
+      "properties": {
+        "page_index": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 分页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 分页"
+        }
+      },
+      "title": "PagerForm",
+      "required": [
+        "page_index",
+        "page_size"
+      ]
+    },
+    "PasswdPair": {
+      "type": "object",
+      "properties": {
+        "old_passwd": {
+          "type": "string",
+          "description": " 旧密码"
+        },
+        "new_passwd": {
+          "type": "string",
+          "description": " 新密码"
+        }
+      },
+      "title": "PasswdPair",
+      "required": [
+        "旧密码",
+        "新密码"
+      ]
+    },
+    "TimeRange": {
+      "type": "object",
+      "properties": {
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 时间辍, 秒"
+        },
+        "stop_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 时间辍, 秒"
+        }
+      },
+      "title": "TimeRange",
+      "required": [
+        "start_time",
+        "开始时间",
+        "stop_time",
+        "结束时间"
+      ]
+    },
+    "TimeRangeForm": {
+      "type": "object",
+      "properties": {
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 时间辍, 秒"
+        },
+        "stop_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 时间辍, 秒"
+        }
+      },
+      "title": "TimeRangeForm",
+      "required": [
+        "start_time",
+        "开始时间",
+        "stop_time",
+        "结束时间"
+      ]
+    },
+    "UpdateUserReq": {
+      "type": "object",
+      "properties": {
+        "passwd": {
+          "$ref": "#/definitions/PasswdPair",
+          "description": " 密码, base64 编码的使用 RSA-OAEP 加密的密码. 8-16 个字符，至少包含小写字母、大写字母、数字和特殊字符中的两种. 不更新不要传."
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱, 不更新不要传"
+        },
+        "phone_number": {
+          "type": "string",
+          "description": " 手机号, 不更新不要传"
+        }
+      },
+      "title": "UpdateUserReq",
+      "required": [
+        "邮箱",
+        "手机号"
+      ]
+    },
+    "UpperLower": {
+      "type": "object",
+      "properties": {
+        "upper": {
+          "type": "number",
+          "format": "double",
+          "description": " 上限"
+        },
+        "lower": {
+          "type": "number",
+          "format": "double",
+          "description": " 下限"
+        }
+      },
+      "title": "UpperLower",
+      "required": [
+        "upper",
+        "lower"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 用户 ID"
+        },
+        "account": {
+          "type": "string",
+          "description": " 用户名/账号"
+        },
+        "full_name": {
+          "type": "string",
+          "description": " 姓名"
+        },
+        "department": {
+          "type": "string",
+          "description": " 部门"
+        },
+        "phone_number": {
+          "type": "string",
+          "description": " 手机号"
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱"
+        }
+      },
+      "title": "User",
+      "required": [
+        "id",
+        "account",
+        "full_name",
+        "department",
+        "phone_number",
+        "email"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}
