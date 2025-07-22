@@ -1,7 +1,9 @@
 package job
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"my_backend/internal/logic/job"
@@ -25,7 +27,9 @@ func DownloadJobsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		} else {
 			w.Header().Set("Content-Type", "application/zip")
 			// attachment 会强制浏览器下载，filename 可根据 req 生成不同名字
-			w.Header().Set("Content-Disposition", `attachment; filename="jobs.zip"`)
+			filename := fmt.Sprintf("jobs-%s.zip", time.Now().Format("20060102-150405"))
+
+			w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
 			w.WriteHeader(http.StatusOK)
 			w.Write(resp)
 		}

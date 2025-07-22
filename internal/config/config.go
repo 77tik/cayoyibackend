@@ -8,4 +8,11 @@ type Config struct {
 	Swagger struct {
 		Host string `json:"Host"`
 	}
+
+	FileServer []FileServer
+}
+
+type FileServer struct {
+	ApiPrefix string
+	Dir       string
 }

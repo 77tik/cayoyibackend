@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
+	"io/fs"
 	"my_backend/internal/svc"
 	"my_backend/internal/types"
 	"os"
@@ -71,7 +72,9 @@ func (l *DownloadJobsLogic) DownloadJobs(req *types.DownloadJobsReq) (resp []byt
 	zipWriter := zip.NewWriter(buf)
 
 	for _, t := range targets {
-		err := addDirToZip(zipWriter, t.absPath, t.zipRoot)
+		fsys := os.DirFS(t.absPath)
+		err := addFsToZip(fsys, zipWriter, t.zipRoot)
+		//err := addDirToZip(zipWriter, t.absPath, t.zipRoot)
 		if err != nil {
 			return nil, err
 		}
@@ -113,6 +116,33 @@ func addDirToZip(zipWriter *zip.Writer, basePath, zipRoot string) error {
 		defer f.Close()
 
 		_, err = io.Copy(writer, f)
+		return err
+	})
+}
+
+// 使用 fs.FS 接口实现的压缩
+func addFsToZip(fsys fs.FS, zipWriter *zip.Writer, zipRoot string) error {
+	return fs.WalkDir(fsys, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+
+		zipPath := filepath.ToSlash(filepath.Join(zipRoot, path))
+		writer, err := zipWriter.Create(zipPath)
+		if err != nil {
+			return err
+		}
+
+		file, err := fsys.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		_, err = io.Copy(writer, file)
 		return err
 	})
 }
