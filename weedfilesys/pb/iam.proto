@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package iam_pb;
+
+option go_package = "my-backend/weedfilesys/pb/iam_pb";
+
+service WeedfilesysIdentityAccessManagement {
+
+}
+
+message S3ApiConfiguration {
+  repeated Identity identities = 1;
+  repeated Account accounts = 2;
+}
+
+message Identity {
+  string name = 1;
+  repeated Credential credentials = 2;
+  repeated string actions = 3;
+  Account account = 4;
+}
+
+message Credential {
+  string access_key = 1;
+  string secret_key = 2;
+}
+
+message Account {
+  string id = 1;
+  string display_name = 2;
+  string email_address = 3;
+}
