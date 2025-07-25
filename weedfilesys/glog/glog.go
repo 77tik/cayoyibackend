@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -22,6 +23,14 @@ func (s *severity) get() severity {
 
 // 严重程度不就是级别吗，感觉能删
 type Level int32
+
+func (l *Level) get() Level {
+	return Level(atomic.LoadInt32((*int32)(l)))
+}
+
+func (l *Level) set(level Level) {
+	atomic.StoreInt32((*int32)(l), int32(level))
+}
 
 const (
 	infoLog severity = iota
@@ -71,6 +80,14 @@ type modulePat struct {
 	level   Level  //日志详细级别，比如 v=2 表示Level 2
 }
 
+func (m *modulePat) match(file string) bool {
+	if m.literal {
+		return file == m.pattern
+	}
+	match, _ := filepath.Match(m.pattern, file)
+	return match
+}
+
 // 目前看来没啥用
 type moduleSpec struct {
 	filter []modulePat
@@ -104,7 +121,7 @@ type loggingT struct {
 	traceLocation traceLocation // 在特定位置记录堆栈
 
 	vmodule   moduleSpec // 模块级别日志控制配置，例如按文件名或包名设置不同的日志界别
-	varbosity Level      // -v=2 决定默认打印哪些V日志
+	verbosity Level      // -v=2 决定默认打印哪些V日志
 
 	exited bool // 标记日志系统是否已经退出，防止重复写日志
 }
@@ -520,6 +537,85 @@ func (l *loggingT) printDepth(s severity, depth int, args ...interface{}) {
 	}
 	l.output(s, buf, file, line, false)
 }
+func (l *loggingT) println(s severity, args ...interface{}) {
+	buf, file, line := l.header(s, 0)
+	fmt.Fprintln(buf, args...)
+	l.output(s, buf, file, line, false)
+}
+
+func (l *loggingT) setV(pc uintptr) Level {
+	// 获取对应的函数名
+	fn := runtime.FuncForPC(pc)
+
+	// 获取该函数所在的源文件名和行号
+	file, _ := fn.FileLine(pc)
+
+	// 去掉文件名末尾的 .go 后缀（保留文件名主体）
+	if strings.HasPrefix(file, ".go") {
+		file = file[:len(file)-3]
+	}
+
+	// 提取纯文件名: a/b/c/d.go => a/b/c/d => d
+	if slash := strings.LastIndex(file, "/"); slash >= 0 {
+		file = file[slash+1:]
+	}
+
+	for _, filter := range l.vmodule.filter {
+		if filter.match(file) {
+			l.vmap[pc] = filter.level
+			return filter.level
+		}
+	}
+	l.vmap[pc] = 0
+	return 0
+}
+
+type Verbose bool
+
+func V(level Level) Verbose {
+	if logging.verbosity.get() >= level {
+		return Verbose(true)
+	}
+
+	if atomic.LoadInt32(&logging.filterLength) > 0 {
+		logging.mu.Lock()
+		defer logging.mu.Unlock()
+		// 如果写入栈帧的个数是0，就返回一个Verbose(false)
+		if runtime.Callers(2, logging.pcs[:]) == 0 {
+			return Verbose(false)
+		}
+		v, ok := logging.vmap[logging.pcs[0]]
+		if !ok {
+			v = logging.setV(logging.pcs[0])
+		}
+		return Verbose(v >= level)
+	}
+	return Verbose(false)
+}
+
+// Info is equivalent to the global Info function, guarded by the value of v.
+// See the documentation of V for usage.
+func (v Verbose) Info(args ...interface{}) {
+	if v {
+		logging.print(infoLog, args...)
+	}
+}
+
+// Infoln is equivalent to the global Infoln function, guarded by the value of v.
+// See the documentation of V for usage.
+func (v Verbose) Infoln(args ...interface{}) {
+	if v {
+		logging.println(infoLog, args...)
+	}
+}
+
+// Infof is equivalent to the global Infof function, guarded by the value of v.
+// See the documentation of V for usage.
+func (v Verbose) Infof(format string, args ...interface{}) {
+	if v {
+		logging.printf(infoLog, format, args...)
+	}
+}
 
 func Fatal(args ...interface{}) {
 	logging.print(fatalLog, args...)
@@ -529,4 +625,20 @@ func FatalDepth(depth int, args ...interface{}) {
 }
 func Fatalf(format string, v ...interface{}) {
 	logging.printf(fatalLog, format, v...)
+}
+
+func Error(args ...interface{}) {
+	logging.print(errorLog, args...)
+}
+
+func Errorf(format string, v ...interface{}) {
+	logging.printf(errorLog, format, v...)
+}
+
+func Warning(args ...interface{}) {
+	logging.print(warningLog, args...)
+}
+
+func Warningf(format string, v ...interface{}) {
+	logging.printf(warningLog, format, v...)
 }
