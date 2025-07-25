@@ -1,7 +1,13 @@
 package pb
 
 import (
+	"context"
+	"fmt"
+	"google.golang.org/grpc"
+	"io"
+	"my_backend/weedfilesys/glog"
 	"my_backend/weedfilesys/pb/filer_pb"
+	"my_backend/weedfilesys/util"
 )
 
 // 这个 Go 代码文件定义了在 weedfilesys 系统中订阅和处理元数据变更事件的客户端逻辑，
@@ -26,10 +32,82 @@ type MetadataFollowOption struct {
 	SelfSignature          int32
 	PathPrefix             string
 	AdditionalPathPrefixes []string
+	DirectoriesToWatch     []string
+	StartTsNs              int64
+	StopTsNs               int64
+	EventErrorType         EventErrorType
 }
 
+// 处理订阅元信息返回值的回调函数
 type ProcessMetadataFunc func(resp *filer_pb.SubscribeMetadataResponse) error
 
-//func FollowMetadata(filerServer ServerAddress, grpcDialOption grpc.DialOption, option *MetadataFollowOption, processEventFn ProcessMetadataFunc) error {
-//
-//}
+func FollowMetadata(filerServer ServerAddress, grpcDialOption grpc.DialOption, option *MetadataFollowOption, processEventFn ProcessMetadataFunc) error {
+	err := WithFilerClient(true, option.SelfSignature, filerServer, grpcDialOption, makeSubscribeMetadataFunc(option, processEventFn))
+	if err != nil {
+		return fmt.Errorf("subscribing filer meta change: %w", err)
+	}
+	return nil
+}
+
+func WithFilerClientFollowMetadata(filerClient filer_pb.FilerClient, option *MetadataFollowOption, processEventFn ProcessMetadataFunc) error {
+
+	err := filerClient.WithFilerClient(true, makeSubscribeMetadataFunc(option, processEventFn))
+	if err != nil {
+		return fmt.Errorf("subscribing filer meta change: %w", err)
+	}
+
+	return nil
+}
+
+// 接收原信息设置和处理原信息的回调函数
+func makeSubscribeMetadataFunc(option *MetadataFollowOption, processEventFn ProcessMetadataFunc) func(client filer_pb.WeedfilesysFilerClient) error {
+	return func(client filer_pb.WeedfilesysFilerClient) error {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+		stream, err := client.SubscribeMetadata(ctx, &filer_pb.SubscribeMetadataRequest{
+			ClientName:   option.ClientName,
+			PathPrefix:   option.PathPrefix,
+			PathPrefixes: option.AdditionalPathPrefixes,
+			Directories:  option.DirectoriesToWatch,
+			SinceNs:      option.StartTsNs,
+			Signature:    option.SelfSignature,
+			ClientId:     option.ClientId,
+			ClientEpoch:  option.ClientEpoch,
+			UntilNs:      option.StopTsNs,
+		})
+
+		if err != nil {
+			return fmt.Errorf("subscribe: %w", err)
+		}
+
+		for {
+			resp, listenErr := stream.Recv()
+			if listenErr == io.EOF {
+				return nil
+			}
+			if listenErr != nil {
+				return listenErr
+			}
+
+			if err := processEventFn(resp); err != nil {
+				switch option.EventErrorType {
+				case TrivialOnError:
+					glog.Errorf("process %v: %v", resp, err)
+				case FatalOnError:
+					glog.Fatalf("process %v: %v", resp, err)
+				case RetryForeverOnError:
+					util.RetryUntil("followMetaUpdates", func() error { return processEventFn(resp) }, func(err error) bool {
+						glog.Errorf("process %v: %v", resp, err)
+						return true
+					})
+				case DontLogError:
+				//pass
+				default:
+					glog.Errorf("process %v: %v", resp, err)
+				}
+
+			}
+			option.StartTsNs = resp.TsNs
+		}
+	}
+}

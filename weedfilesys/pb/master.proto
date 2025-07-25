@@ -1,0 +1,464 @@
+syntax = "proto3";
+package master_pb;
+option go_package = "my-backend/weedfilesys/pb/master_pb";
+
+service Weedfilesys {
+  // 卷服务器 向主服务器定期发送心跳信息，主服务器返回配置信息
+  rpc SendHeartbeat (stream Heartbeat) returns (stream HeartbeatResponse){}
+
+  // 长连接维护接口，Filer 等组件通过它与 Master 保持连接，接收节点变化（例如新增/删除 Filer 节点
+  rpc KeepConnected (stream KeepConnectedRequest) returns (stream KeepConnectedResponse){}
+
+  // 查找某个 volume ID 或 file ID 所在的位置（用于客户端上传/下载文件时定位）
+  rpc LookupVolume (LookupVolumeRequest) returns (LookupVolumeResponse) {
+  }
+  // 客户端上传前请求分配一个可写文件 ID（fid）及对应卷的位置。一次性分配
+  rpc Assign (AssignRequest) returns (AssignResponse) {
+  }
+  // 流式分配多个文件 ID（比普通 assign 高效）
+  rpc StreamAssign (stream AssignRequest) returns (stream AssignResponse) {
+  }
+
+  // 查询某种 replication / collection 的统计数据（总大小、文件数量）
+  rpc Statistics (StatisticsRequest) returns (StatisticsResponse) {
+  }
+
+  // 查询逻辑卷
+  rpc CollectionList (CollectionListRequest) returns (CollectionListResponse) {
+  }
+  // 删除逻辑卷
+  rpc CollectionDelete (CollectionDeleteRequest) returns (CollectionDeleteResponse) {
+  }
+
+  // 获取整个集群拓扑结构（data center → rack → node → disk → volume）
+  rpc VolumeList (VolumeListRequest) returns (VolumeListResponse) {
+  }
+  // 查找 EC volume 的 shard 信息和位置
+  rpc LookupEcVolume (LookupEcVolumeRequest) returns (LookupEcVolumeResponse) {
+  }
+
+  // 触发对某个 volume 的垃圾清理（compact
+  rpc VacuumVolume (VacuumVolumeRequest) returns (VacuumVolumeResponse) {
+  }
+  // 关闭自动 vacuum 功能（垃圾清理）
+  rpc DisableVacuum (DisableVacuumRequest) returns (DisableVacuumResponse) {
+  }
+  // 开启自动 vacuum 功能（垃圾清理）
+  rpc EnableVacuum (EnableVacuumRequest) returns (EnableVacuumResponse) {
+  }
+
+  // 将某个 volume 标记为只读（维护/降级）
+  rpc VolumeMarkReadonly (VolumeMarkReadonlyRequest) returns (VolumeMarkReadonlyResponse) {
+  }
+
+  // 获取主服务器的配置信息
+  rpc GetMasterConfiguration (GetMasterConfigurationRequest) returns (GetMasterConfigurationResponse) {
+  }
+  // 获取当前连接的 filer 或 volume 节点信息
+  rpc ListClusterNodes (ListClusterNodesRequest) returns (ListClusterNodesResponse) {
+  }
+
+  // 用于某些需要互斥访问的场景下的租约控制（admin 功能）
+  rpc LeaseAdminToken (LeaseAdminTokenRequest) returns (LeaseAdminTokenResponse) {
+  }
+  rpc ReleaseAdminToken (ReleaseAdminTokenRequest) returns (ReleaseAdminTokenResponse) {
+  }
+  rpc Ping (PingRequest) returns (PingResponse) {
+  }
+
+  // 查看当前master raft集群成员列表
+  rpc RaftListClusterServers (RaftListClusterServersRequest) returns (RaftListClusterServersResponse) {
+  }
+  // 添加一个raft成员节点（比如新master节点）
+  rpc RaftAddServer (RaftAddServerRequest) returns (RaftAddServerResponse) {
+  }
+  // 删除一个raft节点
+  rpc RaftRemoveServer (RaftRemoveServerRequest) returns (RaftRemoveServerResponse) {
+  }
+
+  // 让 Master 新增 Volume（实际由 Master 控制调度，通知某个 Volume Server 创建）
+  rpc VolumeGrow (VolumeGrowRequest) returns (VolumeGrowResponse) {
+  }
+}
+
+message Heartbeat {
+  string ip = 1;
+  uint32 port = 2;
+  string public_url = 3;
+  uint64 max_file_key = 5;
+  string data_center = 6;
+  string rack = 7;
+  uint32 admin_port = 8;
+  repeated VolumeInformationMessage volumes = 9;
+  // delta volumes
+  repeated VolumeShortInformationMessage new_volumes = 10;
+  repeated VolumeShortInformationMessage deleted_volumes = 11;
+  bool has_no_volumes = 12;
+
+  // erasure coding
+  repeated VolumeEcShardInformationMessage ec_shards = 16;
+  // delta erasure coding shards
+  repeated VolumeEcShardInformationMessage new_ec_shards = 17;
+  repeated VolumeEcShardInformationMessage deleted_ec_shards = 18;
+  bool has_no_ec_shards = 19;
+
+  map<string, uint32> max_volume_counts = 4;
+  uint32 grpc_port = 20;
+  repeated string location_uuids = 21;
+}
+
+message HeartbeatResponse {
+  uint64 volume_size_limit = 1;
+  string leader = 2;
+  string metrics_address = 3;
+  uint32 metrics_interval_seconds = 4;
+  repeated StorageBackend storage_backends = 5;
+  repeated string duplicated_uuids = 6;
+  bool preallocate = 7;
+}
+
+message VolumeInformationMessage {
+  uint32 id = 1;
+  uint64 size = 2;
+  string collection = 3;
+  uint64 file_count = 4;
+  uint64 delete_count = 5;
+  uint64 deleted_byte_count = 6;
+  bool read_only = 7;
+  uint32 replica_placement = 8;
+  uint32 version = 9;
+  uint32 ttl = 10;
+  uint32 compact_revision = 11;
+  int64 modified_at_second = 12;
+  string remote_storage_name = 13;
+  string remote_storage_key = 14;
+  string disk_type = 15;
+}
+
+message VolumeShortInformationMessage {
+  uint32 id = 1;
+  string collection = 3;
+  uint32 replica_placement = 8;
+  uint32 version = 9;
+  uint32 ttl = 10;
+  string disk_type = 15;
+}
+
+message VolumeEcShardInformationMessage {
+  uint32 id = 1;
+  string collection = 2;
+  uint32 ec_index_bits = 3;
+  string disk_type = 4;
+  uint64 expire_at_sec = 5; // used to record the destruction time of ec volume
+}
+
+message StorageBackend {
+  string type = 1;
+  string id = 2;
+  map<string, string> properties = 3;
+}
+
+message Empty {
+}
+
+message SuperBlockExtra {
+  message ErasureCoding {
+    uint32 data = 1;
+    uint32 parity = 2;
+    repeated uint32 volume_ids = 3;
+  }
+  ErasureCoding erasure_coding = 1;
+}
+
+message KeepConnectedRequest {
+  string client_type = 1;
+  string client_address = 3;
+  string version = 4;
+  string filer_group = 5;
+  string data_center = 6;
+  string rack = 7;
+}
+
+message VolumeLocation {
+  string url = 1;
+  string public_url = 2;
+  repeated uint32 new_vids = 3;
+  repeated uint32 deleted_vids = 4;
+  string leader = 5; // optional when leader is not itself
+  string data_center = 6; // optional when DataCenter is in use
+  uint32 grpc_port = 7;
+  repeated uint32 new_ec_vids = 8;
+  repeated uint32 deleted_ec_vids = 9;
+}
+
+message ClusterNodeUpdate {
+  string node_type = 1;
+  string address = 2;
+  bool is_add = 4;
+  string filer_group = 5;
+  int64 created_at_ns = 6;
+}
+
+message KeepConnectedResponse {
+  VolumeLocation volume_location = 1;
+  ClusterNodeUpdate cluster_node_update = 2;
+}
+
+message LookupVolumeRequest {
+  repeated string volume_or_file_ids = 1;
+  string collection = 2; // optional, a bit faster if provided.
+}
+message LookupVolumeResponse {
+  message VolumeIdLocation {
+    string volume_or_file_id = 1;
+    repeated Location locations = 2;
+    string error = 3;
+    string auth = 4;
+  }
+  repeated VolumeIdLocation volume_id_locations = 1;
+}
+
+message Location {
+  string url = 1;
+  string public_url = 2;
+  uint32 grpc_port = 3;
+  string data_center = 4;
+}
+
+message AssignRequest {
+  uint64 count = 1;
+  string replication = 2;
+  string collection = 3;
+  string ttl = 4;
+  string data_center = 5;
+  string rack = 6;
+  string data_node = 7;
+  uint32 memory_map_max_size_mb = 8;
+  uint32 writable_volume_count = 9;
+  string disk_type = 10;
+}
+
+message VolumeGrowRequest {
+  uint32 writable_volume_count = 1;
+  string replication = 2;
+  string collection = 3;
+  string ttl = 4;
+  string data_center = 5;
+  string rack = 6;
+  string data_node = 7;
+  uint32 memory_map_max_size_mb = 8;
+  string disk_type = 9;
+}
+
+message AssignResponse {
+  string fid = 1;
+  uint64 count = 4;
+  string error = 5;
+  string auth = 6;
+  repeated Location replicas = 7;
+  Location location = 8;
+}
+
+message StatisticsRequest {
+  string replication = 1;
+  string collection = 2;
+  string ttl = 3;
+  string disk_type = 4;
+}
+message StatisticsResponse {
+  uint64 total_size = 4;
+  uint64 used_size = 5;
+  uint64 file_count = 6;
+}
+
+//
+// collection related
+//
+message Collection {
+  string name = 1;
+}
+message CollectionListRequest {
+  bool include_normal_volumes = 1;
+  bool include_ec_volumes = 2;
+}
+message CollectionListResponse {
+  repeated Collection collections = 1;
+}
+
+message CollectionDeleteRequest {
+  string name = 1;
+}
+message CollectionDeleteResponse {
+}
+
+//
+// volume related
+//
+message DiskInfo {
+  string type = 1;
+  int64 volume_count = 2;
+  int64 max_volume_count = 3;
+  int64 free_volume_count = 4;
+  int64 active_volume_count = 5;
+  repeated VolumeInformationMessage volume_infos = 6;
+  repeated VolumeEcShardInformationMessage ec_shard_infos = 7;
+  int64 remote_volume_count = 8;
+}
+message DataNodeInfo {
+  string id = 1;
+  map<string, DiskInfo> diskInfos = 2;
+  uint32 grpc_port = 3;
+}
+message RackInfo {
+  string id = 1;
+  repeated DataNodeInfo data_node_infos = 2;
+  map<string, DiskInfo> diskInfos = 3;
+}
+message DataCenterInfo {
+  string id = 1;
+  repeated RackInfo rack_infos = 2;
+  map<string, DiskInfo> diskInfos = 3;
+}
+message TopologyInfo {
+  string id = 1;
+  repeated DataCenterInfo data_center_infos = 2;
+  map<string, DiskInfo> diskInfos = 3;
+}
+message VolumeListRequest {
+}
+message VolumeListResponse {
+  TopologyInfo topology_info = 1;
+  uint64 volume_size_limit_mb = 2;
+}
+
+message LookupEcVolumeRequest {
+  uint32 volume_id = 1;
+}
+message LookupEcVolumeResponse {
+  uint32 volume_id = 1;
+  message EcShardIdLocation {
+    uint32 shard_id = 1;
+    repeated Location locations = 2;
+  }
+  repeated EcShardIdLocation shard_id_locations = 2;
+}
+
+message VacuumVolumeRequest {
+  float garbage_threshold = 1;
+  uint32 volume_id = 2;
+  string collection = 3;
+}
+message VacuumVolumeResponse {
+}
+
+message DisableVacuumRequest {
+}
+message DisableVacuumResponse {
+}
+
+message EnableVacuumRequest {
+}
+message EnableVacuumResponse {
+}
+
+message VolumeMarkReadonlyRequest {
+  string ip = 1;
+  uint32 port = 2;
+  uint32 volume_id = 4;
+  string collection = 5;
+  uint32 replica_placement = 6;
+  uint32 version = 7;
+  uint32 ttl = 8;
+  string disk_type = 9;
+  bool is_readonly = 10;
+}
+message VolumeMarkReadonlyResponse {
+}
+
+message GetMasterConfigurationRequest {
+}
+message GetMasterConfigurationResponse {
+  string metrics_address = 1;
+  uint32 metrics_interval_seconds = 2;
+  repeated StorageBackend storage_backends = 3;
+  string default_replication = 4;
+  string leader = 5;
+  uint32 volume_size_limit_m_b = 6;
+  bool volume_preallocate = 7;
+}
+
+message ListClusterNodesRequest {
+  string client_type = 1;
+  string filer_group = 2;
+  int32 limit = 4;
+}
+message ListClusterNodesResponse {
+  message ClusterNode {
+    string address = 1;
+    string version = 2;
+    int64 created_at_ns = 4;
+    string data_center = 5;
+    string rack = 6;
+  }
+  repeated ClusterNode cluster_nodes = 1;
+}
+
+message LeaseAdminTokenRequest {
+  int64 previous_token = 1;
+  int64 previous_lock_time = 2;
+  string lock_name = 3;
+  string client_name = 4;
+  string message = 5;
+}
+message LeaseAdminTokenResponse {
+  int64 token = 1;
+  int64 lock_ts_ns = 2;
+}
+
+message ReleaseAdminTokenRequest {
+  int64 previous_token = 1;
+  int64 previous_lock_time = 2;
+  string lock_name = 3;
+}
+message ReleaseAdminTokenResponse {
+}
+
+message PingRequest {
+  string target = 1; // default to ping itself
+  string target_type = 2;
+}
+message PingResponse {
+  int64 start_time_ns = 1;
+  int64 remote_time_ns = 2;
+  int64 stop_time_ns = 3;
+}
+
+message RaftAddServerRequest {
+  string id = 1;
+  string address = 2;
+  bool voter = 3;
+}
+message RaftAddServerResponse {
+}
+
+message RaftRemoveServerRequest {
+  string id = 1;
+  bool force = 2;
+}
+message RaftRemoveServerResponse {
+}
+
+message RaftListClusterServersRequest {
+}
+message RaftListClusterServersResponse {
+  message ClusterServers {
+    string id = 1;
+    string address = 2;
+    string suffrage = 3;
+    bool   isLeader = 4;
+  }
+  repeated ClusterServers cluster_servers = 1;
+}
+
+message VolumeGrowResponse {
+}
