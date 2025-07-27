@@ -32,3 +32,8 @@ func (fp FullPath) DirAndName() (string, string) {
 	// 因为filepath的目录总是返回 "/" 结尾的，所以要剔除最后边的"/"
 	return dir[:len(dir)-1], name
 }
+func (fp FullPath) Name() string {
+	_, name := filepath.Split(string(fp))
+	name = strings.ToValidUTF8(name, "?")
+	return name
+}

@@ -9,6 +9,7 @@ import (
 	"math/rand/v2"
 	"my_backend/weedfilesys/glog"
 	"my_backend/weedfilesys/pb/filer_pb"
+	"my_backend/weedfilesys/pb/master_pb"
 	"my_backend/weedfilesys/util"
 	"strconv"
 	"strings"
@@ -157,4 +158,12 @@ func hostAndPort(address string) (host string, port uint64, err error) {
 		return "", 0, fmt.Errorf("server port parse error: %w", err)
 	}
 	return address[:colonIndex], port, err
+}
+
+func WithMasterClient(streamingMode bool, master ServerAddress, grpcDialOption grpc.DialOption, waitForReady bool, fn func(client master_pb.WeedfilesysClient) error) error {
+	return WithGrpcClient(streamingMode, 0, func(grpcConnection *grpc.ClientConn) error {
+		client := master_pb.NewWeedfilesysClient(grpcConnection)
+		return fn(client)
+	}, master.ToGrpcAddress(), waitForReady, grpcDialOption)
+
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
+	"my_backend/weedfilesys/cluster/lock_manager"
 	"my_backend/weedfilesys/glog"
 	"my_backend/weedfilesys/pb"
 	"my_backend/weedfilesys/pb/filer_pb"
@@ -115,4 +116,66 @@ func (lock *LiveLock) doLock(lockDuration time.Duration) (errorMessage string, e
 		return err
 	})
 	return
+}
+
+func (lc *LockClient) StartLongLivedLock(key string, owner string, onLockOwnerChange func(newLockOwner string)) (lock *LiveLock) {
+	lock = &LiveLock{
+		key:       key,
+		hostFiler: lc.seedFiler,
+		cancelCH:  make(chan struct{}),
+		// TODO: 长时间应该提取出变量
+		expireAtNs:     time.Now().Add(lock_manager.LiveLockTTL).UnixNano(),
+		grpcDialOption: lc.grpcDialOption,
+		self:           owner,
+		lc:             lc,
+	}
+	go func() {
+		isLocked := false
+		lockOwner := ""
+		for {
+			// 如果当前已经持有锁，就执行“续约”（本质上也是重新申请）：
+			//
+			//如果失败，说明锁丢失了 → isLocked = false
+			//
+			//如果没持有锁，就尝试“获取锁”：
+			//
+			//如果成功，则将 isLocked = true
+			if isLocked {
+				if err := lock.AttemptToLock(lock_manager.LiveLockTTL); err != nil {
+					glog.V(0).Infof("Lost lock %s: %v", key, err)
+					isLocked = false
+				}
+			} else {
+				if err := lock.AttemptToLock(lock_manager.LiveLockTTL); err == nil {
+					isLocked = true
+				}
+			}
+
+			// lock.LockOwner() 获取当前锁的实际持有者（从中心节点获得的最新状态）。
+			//
+			//如果发现和本地记录 lockOwner 不一致，就说明锁被他人抢占或释放被他人获取了。
+			//
+			//此时触发 onLockOwnerChange 回调。
+			if lockOwner != lock.LockOwner() && lock.LockOwner() != "" {
+				glog.V(0).Infof("Lock owner changed from %s to %s", lockOwner, lock.LockOwner())
+				onLockOwnerChange(lock.LockOwner())
+				lockOwner = lock.LockOwner()
+			}
+
+			// 如果外部调用了 lock.Stop() 关闭 cancelCH，协程会退出。
+			//
+			//否则每轮循环休眠一段时间（RenewInterval，如 3 秒），继续下一轮尝试。
+			select {
+			case <-lock.cancelCH:
+				return
+			default:
+				time.Sleep(lock_manager.RenewInterval)
+			}
+		}
+	}()
+	return
+}
+
+func (lock *LiveLock) LockOwner() string {
+	return lock.owner
 }
