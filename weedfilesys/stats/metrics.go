@@ -81,6 +81,14 @@ var (
 			Name:      "connect_updates",
 			Help:      "Counter of master client leader updates.",
 		}, []string{"type"})
+
+	VolumeServerHandlerCounter = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Namespace: Namespace,
+			Subsystem: "volumeServer",
+			Name:      "handler_total",
+			Help:      "Counter of volume server handlers.",
+		}, []string{"type"})
 )
 
 func init() {
