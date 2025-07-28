@@ -1,7 +1,7 @@
 package svc
 
 import (
-	"my_backend/internal/config"
+	"cayoyibackend/internal/config"
 	"sync"
 )
 

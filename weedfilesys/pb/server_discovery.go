@@ -1,7 +1,7 @@
 ﻿package pb
 
 import (
-	"my_backend/weedfilesys/glog"
+	"cayoyibackend/weedfilesys/glog"
 	"reflect"
 )
 

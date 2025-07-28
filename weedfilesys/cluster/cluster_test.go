@@ -1,7 +1,7 @@
 package cluster
 
 import (
-	"my_backend/weedfilesys/pb"
+	"cayoyibackend/weedfilesys/pb"
 	"strconv"
 	"sync"
 	"testing"

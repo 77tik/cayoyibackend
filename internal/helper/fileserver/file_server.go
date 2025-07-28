@@ -1,8 +1,8 @@
 package fileserver
 
 import (
+	"cayoyibackend/internal/config"
 	"github.com/zeromicro/go-zero/rest"
-	"my_backend/internal/config"
 	"net/http"
 	"path/filepath"
 	"slices"

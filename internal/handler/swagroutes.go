@@ -1,12 +1,12 @@
 package handler
 
 import (
+	"cayoyibackend/internal/svc"
 	"embed"
 	"encoding/json"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
-	"my_backend/internal/svc"
 	"net/http"
 )
 

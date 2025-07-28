@@ -1,8 +1,8 @@
 package dash
 
 import (
+	"cayoyibackend/weedfilesys/wdclient"
 	"google.golang.org/grpc"
-	"my_backend/weedfilesys/wdclient"
 	"net/http"
 	"time"
 )

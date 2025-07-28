@@ -1,11 +1,11 @@
 ﻿package cluster
 
 import (
+	"cayoyibackend/weedfilesys/glog"
+	"cayoyibackend/weedfilesys/pb"
+	"cayoyibackend/weedfilesys/pb/master_pb"
 	"context"
 	"google.golang.org/grpc"
-	"my_backend/weedfilesys/glog"
-	"my_backend/weedfilesys/pb"
-	"my_backend/weedfilesys/pb/master_pb"
 )
 
 //	ListExistingPeerUpdates 是 Weedfilesys 中用于查询集群中已存在的节点

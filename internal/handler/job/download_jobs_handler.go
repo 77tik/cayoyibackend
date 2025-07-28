@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
+	"cayoyibackend/internal/logic/job"
+	"cayoyibackend/internal/svc"
+	"cayoyibackend/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"my_backend/internal/logic/job"
-	"my_backend/internal/svc"
-	"my_backend/internal/types"
 )
 
 // 作业文件下载

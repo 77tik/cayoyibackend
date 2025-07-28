@@ -9,7 +9,7 @@ package volume_server_pb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	remote_pb "my_backend/weedfilesys/pb/remote_pb"
+	remote_pb "cayoyibackend/weedfilesys/pb/remote_pb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"

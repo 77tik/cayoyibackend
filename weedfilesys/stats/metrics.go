@@ -1,10 +1,10 @@
 ﻿package stats
 
 import (
+	"cayoyibackend/weedfilesys/glog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/client_golang/prometheus/push"
-	"my_backend/weedfilesys/glog"
 	"net"
 	"net/http"
 	"os"

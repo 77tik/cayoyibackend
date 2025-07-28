@@ -4,64 +4,15 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1df704f9-d6c7-4c6b-b11a-54c10b6b7699" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/weedfilesys/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/cluster/lock_manager/distributed_lock_manager.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/cluster/master_client.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/chunk_cache/chunk_cache.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/chunk_cache/chunk_cache_in_memory.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/chunk_cache/chunk_cache_on_disk.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/chunk_cache/on_disk_cache_layer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/entry.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/entry_codec.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/filechunk_section.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/filechunks.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/filer_hardlink.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/interval_list.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/reader_at.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/filer/reader_cache.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/pb/master_pb/master_helper.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/pb/remote.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/pb/remote_pb/remote.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/pb/server_discovery.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/pb/volume_server.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/pb/volume_server_pb/volume_server.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/pb/volume_server_pb/volume_server_grpc.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/stats/metrics.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/stats/metrics_names.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/storage/backend/backend.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/storage/needle_map.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/util/bytes.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/util/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/util/constants_4bytes.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/util/file_util.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/util/version/constants.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/wdclient/masterclient.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weedfilesys/wdclient/vid_map.go" afterDir="false" />
+    <list default="true" id="9c46ddf0-2972-4a1c-8c83-fef17576120b" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/admin/dash/admin_data.go" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/admin/dash/admin_data.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/admin/dash/admin_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/admin/dash/admin_server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/cluster/lock_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/cluster/lock_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/pb/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/pb/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/pb/grpc_client_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/pb/grpc_client_server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/pb/server_address.go" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/pb/server_address.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/util/fullpath.go" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/util/fullpath.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weedfilesys/util/retry.go" beforeDir="false" afterPath="$PROJECT_DIR$/weedfilesys/util/retry.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Go File" />
-      </list>
-    </option>
   </component>
   <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../usr/local/go" />
   <component name="Git.Settings">
@@ -75,13 +26,14 @@
     </option>
     <option name="useGoPathFromSystemEnvironment" value="false" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 7
-}</component>
-  <component name="ProjectId" id="30N1b2lT4fuyXPV2XRJR4FNYbM1" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="30Tx9fsWN1tvB60rco7Gt0DthvG" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -89,47 +41,41 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "E:/Codes/GoCodes/seaweedfs-master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/Cayoyi",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "go.autoimport"
+    "settings.editor.selected.configurable": "com.goide.configuration.GoLibrariesConfigurableProvider"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="\\wsl.localhost\Ubuntu-22.04\home\cayoyi\project\cayoyibackend\weedfilesys\storage\backend" />
-    </key>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-33c477a475b1-b97fc8a1e17c-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-241.14494.238" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-GO-241.14494.238" />
+        <option value="bundled-gosdk-3b128438d3f6-07d2d2d66b1e-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-251.26927.50" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-GO-251.26927.50" />
       </set>
     </attachedChunks>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="9c46ddf0-2972-4a1c-8c83-fef17576120b" name="更改" comment="" />
+      <created>1753665213461</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753665213461</updated>
+    </task>
+    <servers />
+  </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

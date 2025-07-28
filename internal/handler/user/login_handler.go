@@ -3,10 +3,10 @@ package user
 import (
 	"net/http"
 
+	"cayoyibackend/internal/logic/user"
+	"cayoyibackend/internal/svc"
+	"cayoyibackend/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"my_backend/internal/logic/user"
-	"my_backend/internal/svc"
-	"my_backend/internal/types"
 )
 
 // 用户登录

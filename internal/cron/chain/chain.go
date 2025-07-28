@@ -1,10 +1,10 @@
 package chain
 
 import (
+	"cayoyibackend/dao/model"
+	"cayoyibackend/internal/svc"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
-	"my_backend/dao/model"
-	"my_backend/internal/svc"
 )
 
 // 自造责任链实现定时任务

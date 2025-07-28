@@ -6,9 +6,9 @@ package handler
 import (
 	"net/http"
 
-	job "my_backend/internal/handler/job"
-	user "my_backend/internal/handler/user"
-	"my_backend/internal/svc"
+	job "cayoyibackend/internal/handler/job"
+	user "cayoyibackend/internal/handler/user"
+	"cayoyibackend/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

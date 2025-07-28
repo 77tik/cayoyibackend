@@ -1,11 +1,11 @@
 package main
 
 import (
+	"cayoyibackend/internal/config"
+	"cayoyibackend/internal/handler"
+	"cayoyibackend/internal/svc"
 	"flag"
 	"fmt"
-	"my_backend/internal/config"
-	"my_backend/internal/handler"
-	"my_backend/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

@@ -1,8 +1,8 @@
 ﻿package util
 
 import (
+	"cayoyibackend/weedfilesys/glog"
 	"github.com/spf13/viper"
-	"my_backend/weedfilesys/glog"
 	"strings"
 	"sync"
 )

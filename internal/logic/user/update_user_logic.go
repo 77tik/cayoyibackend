@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	"my_backend/internal/svc"
-	"my_backend/internal/types"
+	"cayoyibackend/internal/svc"
+	"cayoyibackend/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

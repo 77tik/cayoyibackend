@@ -1,18 +1,18 @@
 ﻿package wdclient
 
 import (
+	"cayoyibackend/weedfilesys/util"
+	"cayoyibackend/weedfilesys/util/version"
 	"context"
 	"fmt"
-	"my_backend/weedfilesys/util"
-	"my_backend/weedfilesys/util/version"
 
+	"cayoyibackend/weedfilesys/glog"
+	"cayoyibackend/weedfilesys/pb"
+	"cayoyibackend/weedfilesys/pb/master_pb"
+	"cayoyibackend/weedfilesys/stats"
 	"google.golang.org/grpc"
 	"math/rand"
-	"my_backend/weedfilesys/glog"
-	"my_backend/weedfilesys/pb"
-	"my_backend/weedfilesys/pb/master_pb"
-	"my_backend/weedfilesys/stats"
-	//"my_backend/weedfilesys/util/version"
+	//"cayoyibackend/weedfilesys/util/version"
 	"sync"
 	"time"
 )

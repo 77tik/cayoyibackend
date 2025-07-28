@@ -3,13 +3,13 @@ package job
 import (
 	"archive/zip"
 	"bytes"
+	"cayoyibackend/internal/svc"
+	"cayoyibackend/internal/types"
 	"context"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
 	"io/fs"
-	"my_backend/internal/svc"
-	"my_backend/internal/types"
 	"os"
 	"path/filepath"
 )

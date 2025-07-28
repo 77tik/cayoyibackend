@@ -1,12 +1,12 @@
 ﻿package wdclient
 
 import (
+	"cayoyibackend/weedfilesys/glog"
+	"cayoyibackend/weedfilesys/pb"
 	"context"
 	"errors"
 	"fmt"
 	"math/rand/v2"
-	"my_backend/weedfilesys/glog"
-	"my_backend/weedfilesys/pb"
 	"strconv"
 	"strings"
 	"sync"

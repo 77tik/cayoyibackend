@@ -3,9 +3,9 @@ package user
 import (
 	"net/http"
 
+	"cayoyibackend/internal/logic/user"
+	"cayoyibackend/internal/svc"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"my_backend/internal/logic/user"
-	"my_backend/internal/svc"
 )
 
 // 获取 RSA 加密公钥

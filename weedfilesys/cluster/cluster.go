@@ -1,8 +1,8 @@
 package cluster
 
 import (
-	"my_backend/weedfilesys/pb"
-	"my_backend/weedfilesys/pb/master_pb"
+	"cayoyibackend/weedfilesys/pb"
+	"cayoyibackend/weedfilesys/pb/master_pb"
 
 	"sync"
 	"time"

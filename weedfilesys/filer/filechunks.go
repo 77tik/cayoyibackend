@@ -1,6 +1,6 @@
 ﻿package filer
 
-import "my_backend/weedfilesys/pb/filer_pb"
+import "cayoyibackend/weedfilesys/pb/filer_pb"
 
 // 计算所有 chunk 中最大的 (offset + size)，即文件的逻辑总大小
 func TotalSize(chunks []*filer_pb.FileChunk) (size uint64) {

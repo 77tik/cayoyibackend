@@ -1,9 +1,9 @@
 package fileserver
 
 import (
+	"cayoyibackend/internal/helper/fileserver/internal/fileserver"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"my_backend/internal/helper/fileserver/internal/fileserver"
 	"net/http"
 	"unsafe"
 )

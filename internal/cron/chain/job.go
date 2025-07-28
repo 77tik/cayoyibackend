@@ -1,10 +1,10 @@
 package chain
 
 import (
+	"cayoyibackend/dao/model"
+	"cayoyibackend/internal/svc"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
-	"my_backend/dao/model"
-	"my_backend/internal/svc"
 )
 
 var JobChannel = make(chan int64, 10)

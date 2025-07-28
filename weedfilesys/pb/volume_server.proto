@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
 
 package volume_server_pb;
-option go_package = "my_backend/weedfilesys/pb/volume_server_pb";
+option go_package = "cayoyibackend/weedfilesys/pb/volume_server_pb";
 
 import "remote.proto";
 

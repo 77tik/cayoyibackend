@@ -1,13 +1,13 @@
 package pb
 
 import (
+	"cayoyibackend/weedfilesys/glog"
+	"cayoyibackend/weedfilesys/pb/filer_pb"
+	"cayoyibackend/weedfilesys/util"
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
 	"io"
-	"my_backend/weedfilesys/glog"
-	"my_backend/weedfilesys/pb/filer_pb"
-	"my_backend/weedfilesys/util"
 )
 
 // 这个 Go 代码文件定义了在 weedfilesys 系统中订阅和处理元数据变更事件的客户端逻辑，

@@ -1,7 +1,7 @@
 ﻿package filer
 
 import (
-	"my_backend/weedfilesys/wdclient"
+	"cayoyibackend/weedfilesys/wdclient"
 	"sync"
 )
 

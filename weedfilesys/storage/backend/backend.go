@@ -1,11 +1,11 @@
 ﻿package backend
 
 import (
+	"cayoyibackend/weedfilesys/glog"
+	"cayoyibackend/weedfilesys/pb/master_pb"
+	"cayoyibackend/weedfilesys/pb/volume_server_pb"
+	"cayoyibackend/weedfilesys/util"
 	"io"
-	"my_backend/weedfilesys/glog"
-	"my_backend/weedfilesys/pb/master_pb"
-	"my_backend/weedfilesys/pb/volume_server_pb"
-	"my_backend/weedfilesys/util"
 	"os"
 	"strings"
 	"time"
