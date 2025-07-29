@@ -1,0 +1,17 @@
+# FROM 1.117.192.82:8666/library/node:18_arm64 AS builder
+FROM 1.117.192.82:8666/library/node:14-slim AS builder
+
+RUN yarn config set registry http://10.0.1.66:4873
+
+WORKDIR /workspace
+COPY . .
+COPY package.json /temp/package.json
+COPY yarn.lock /temp/yarn.lock
+RUN cd /temp && yarn
+RUN ln -s /temp/node_modules /workspace/node_modules
+RUN yarn build
+
+FROM 1.117.192.82:8666/library/nginx:stable-alpine_arm64
+COPY --from=builder /workspace/dist /dist
+
+EXPOSE 8210

@@ -1,0 +1,54 @@
+{
+  "private": true,
+  "author": "ganzw <ganzw@guahao.com>",
+  "scripts": {
+    "analyze": "cross-env ANALYZE=1 max build",
+    "build": "max build",
+    "dev": "max dev",
+    "postinstall": "max setup",
+    "prepare": "husky install",
+    "preview": "max preview",
+    "setup": "max setup",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "@alova/adapter-axios": "^2.0.13",
+    "@ant-design/icons": "^4.7.0",
+    "@ant-design/pro-components": "^1.1.3",
+    "@types/react-window": "^1.8.8",
+    "@types/ys-dte": "^4.5.0",
+    "@umijs/max": "^4.0.7",
+    "ahooks": "^3.5.2",
+    "alova": "^3.2.11",
+    "antd": "^4.20.7",
+    "axios": "^1.9.0",
+    "echarts": "^5.6.0",
+    "mobx": "^6.3.2",
+    "mobx-react-lite": "^3.2.2",
+    "node-forge": "^1.3.1",
+    "react-window": "^1.8.11",
+    "react-window-infinite-loader": "^1.0.10",
+    "styled-components": "^5.0.1",
+    "three": "^0.177.0",
+    "ys-dte": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/styled-components": "^5.1.26",
+    "@types/three": "^0.177.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "cross-env": "^7.0.3",
+    "esbuild-wasm": "latest",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "postcss-pxtorem": "*",
+    "prettier": "^2",
+    "prettier-plugin-organize-imports": "^2",
+    "prettier-plugin-packagejson": "^2",
+    "typescript": "^4.1.2"
+  },
+  "overrides": {
+    "esbuild": "npm:esbuild-wasm@latest"
+  }
+}
