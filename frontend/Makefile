@@ -38,6 +38,7 @@ build: docker-login
 run:
 	@echo "运行容器$(CONTAINER_NAME)..."
 	docker run -it --rm \
+		--add-host=host.docker.internal:host-gateway \
 		-p $(PORT):$(PORT) \
 		-v $(PWD)/$(NGINX_CONF_DIR)/nginx.conf:/etc/nginx/nginx.conf \
 		-v $(PWD)/$(NGINX_CONF_DIR)/fe_dev.conf:/etc/nginx/conf.d/default.conf \

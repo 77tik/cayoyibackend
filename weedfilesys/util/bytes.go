@@ -18,6 +18,14 @@ func Uint32toBytes(b []byte, v uint32) {
 	}
 }
 
+func Uint16toBytes(b []byte, v uint16) {
+	b[0] = byte(v >> 8)
+	b[1] = byte(v)
+}
+func Uint8toBytes(b []byte, v uint8) {
+	b[0] = byte(v)
+}
+
 func BytesToUint64(b []byte) (v uint64) {
 	length := uint(len(b))
 	for i := uint(0); i < length-1; i++ {

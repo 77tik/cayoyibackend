@@ -31,7 +31,7 @@ func (s Size) IsDeleted() bool {
 	return s < 0 || s == TombstoneFileSize
 }
 
-func (s Size) IsVaild() bool {
+func (s Size) IsValid() bool {
 	return s > 0 && s != TombstoneFileSize
 }
 

@@ -28,3 +28,16 @@
    建议实现顺序：
 
 storage → master/server → filer → cluster/topology → replication/raft → server/s3api/shell → mount → security/admin
+
+## nginx与docker:使用报告
++ 用容器启动的nginx是在windows的docker desktop中，和wsl中的网络是隔离的，因此请求不会被转发到wsl中的后端里
+  + 所以需要修改nginx内的配置和docker run的指令：
+    + 首先是docker run要加上：--add-host=host.docker.internal:host-gateway \ 这个表示docker提供的虚拟域名，在容器里会指向windows宿主机
+    + 然后是nginx配置：upstream ruben {
+      server host.docker.internal:8845; // 端口是后端服务开的端口,后端host必须是0.0.0.0
+      } 修改为docker的虚拟域名
++ makefile 中构建好nginx容器以后，每次修改完配置只要make run 就可以了，因为make run只是挂在配置，无需重新构建
++ 前端代码被编译为css，js，html，最终被放入nginx容器中的某个目录下，所以启动nginx容器即可开启前端服务
++ 前端代码中 routes.ts 会将普通路由重定向到指定的路由，但是proxy.ts 只是本地测试不会被编译到最终的文件中，令人感到奇怪的是他们都在config中，但是一个会被编译，另一个不会
++ dockerfile是指定一个容器该怎么构建，docker compose是管理一堆容器，所以每次都要先dockerfile把代码构建好，比如就先构建了前端代码到nginx容器中，再compose管理这些容器
+    
