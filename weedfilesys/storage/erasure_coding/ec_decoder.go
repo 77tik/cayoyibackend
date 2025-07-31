@@ -4,6 +4,7 @@ import (
 	"cayoyibackend/weedfilesys/storage/backend"
 	"cayoyibackend/weedfilesys/storage/idx"
 	"cayoyibackend/weedfilesys/storage/needle"
+	"cayoyibackend/weedfilesys/storage/needle_map"
 	"cayoyibackend/weedfilesys/storage/super_block"
 	"cayoyibackend/weedfilesys/storage/types"
 	"fmt"
@@ -25,6 +26,11 @@ import (
 // | `.dat`             | 还原出的原始数据文件（由 `.ec00`\~`.ec09` 合成） |
 
 // write .idx file from .ecx and .ecj files
+// 从 .ecx 和 .ecj 文件生成 .idx 文件：
+//
+// .ecx 拷贝过来当作 .idx 文件的前半部分（未删除的 entry）
+//
+// .ecj 文件中包含已删除 NeedleId，对应追加 tombstone entry：
 func WriteIdxFileFromEcIndex(baseFileName string) (err error) {
 
 	ecxFile, openErr := os.OpenFile(baseFileName+".ecx", os.O_RDONLY, 0644)
